@@ -1,11 +1,29 @@
 <script>
-	export let name;
+	// imports
+	import AsideForm from './components/AsideForm.svelte';
+	import Controls from './components/Controls.svelte';
+	import Graph from './components/Graph.svelte';
+
 </script>
 
 <style>
-	h1 {
-		color: purple;
+	header {
+		display: flex;
+		grid-area: header;
+		align-items: center;
 	}
 </style>
 
-<h1>Hello {name}!</h1>
+
+
+<header>
+	<Controls />
+</header>
+
+<aside>
+	<AsideForm />
+</aside>
+
+<main>
+	<Graph />
+</main>
