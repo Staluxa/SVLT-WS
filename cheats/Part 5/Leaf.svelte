@@ -9,16 +9,23 @@
 
   // props
   export let name;
+  export let parent;
+  export let cdepth;
+  export let rdepth;
+  export let childrenCount = 0;
+  export let i;
 
   // inner state
-  let buttonNode;
+  let buttonNode, svgWidth, svgHeight, path;
 
-  // let leafID = getFullBranchName({name, parent});
-  // $: active = $leafStates[leafID];
+  let leafID = getFullBranchName({name, parent});
+  $: active = $leafStates[leafID];
 
 
   function leafClick(e) {
-    //pass event to parent
+    dispatch('pressed', {
+      name, parent
+    });
   }
 
   function setPath() {
@@ -33,14 +40,25 @@
   }
 
   // lifecycle callbacks
+  function introEnd() {
+    if (!path) {
+      setPath();
+    }
+  }
 
   afterUpdate(() => {
     if (!active) { return; }
-    // setPath();
+    setPath();
   });
 
   onMount(() => {
-    // implement init
+    const sibling = $flatTree.find((leaf) => leaf.parent === parent && leaf.name !== name);
+    const siblingStatus = sibling && $leafStates[getFullBranchName(sibling)] || undefined;
+    if (typeof siblingStatus === 'undefined') {
+      updateObjectStore(leafStates, leafID, i ? false : true);
+    } else {
+      $leafStates[leafID] = siblingStatus;
+    }
   });
 
 </script>
@@ -74,9 +92,18 @@
   }
 </style>
 
-<!-- {#if active || !i} -->
-  <div>
+{#if active || !i}
+  {#if path}
+    <svg width="{svgWidth}" height="{svgHeight}">
+      <path transition:draw d="{path}" fill="none" stroke="#333"></path>
+    </svg>
+  {/if}
+  <div style="grid-column: {cdepth}; grid-row: {rdepth}"
+    transition:fade on:introend="{introEnd}">
     <span>{name}</span>
-    <button bind:this={buttonNode}></button>
+    <button bind:this={buttonNode}
+      style="cursor: {childrenCount ? 'pointer' : 'auto'}"
+      on:click={leafClick}
+    ></button>
   </div>
-<!-- {/if} -->
+{/if}

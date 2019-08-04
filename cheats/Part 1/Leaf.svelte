@@ -9,6 +9,11 @@
 
   // props
   export let name;
+  export let parent;
+  export let cdepth;
+  export let rdepth;
+  export let childrenCount = 0;
+  export let i;
 
   // inner state
   let buttonNode;
@@ -21,23 +26,8 @@
     //pass event to parent
   }
 
-  function setPath() {
-    const rect = buttonNode.getBoundingClientRect();
-    updateObjectStore(positionMap, leafID, {x: rect.left + rect.width / 2, y: rect.top + rect.height / 2});
-    const start = $positionMap[parent];
-    const end = $positionMap[leafID];
-    path = getPath(start, end);
-    if (!path) { return; }
-    svgWidth = start.x + end.x;
-    svgHeight = start.y + end.y;
-  }
 
   // lifecycle callbacks
-
-  afterUpdate(() => {
-    if (!active) { return; }
-    // setPath();
-  });
 
   onMount(() => {
     // implement init
@@ -75,8 +65,10 @@
 </style>
 
 <!-- {#if active || !i} -->
-  <div>
+  <div style="grid-column: {cdepth}; grid-row: {rdepth}">
     <span>{name}</span>
-    <button bind:this={buttonNode}></button>
+    <button bind:this={buttonNode}
+      style="cursor: {childrenCount ? 'pointer' : 'auto'}"
+    ></button>
   </div>
 <!-- {/if} -->

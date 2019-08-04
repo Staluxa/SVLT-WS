@@ -42,5 +42,7 @@
 </style>
 
 <div>
-  <!-- <Leaf></Leaf> -->
+  {#each $flatTree as leaf, i (getFullBranchName(leaf))}
+    <Leaf {...leaf} i={i} on:pressed={collapseBranch}></Leaf>
+  {/each}
 </div>

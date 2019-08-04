@@ -9,35 +9,27 @@
 
   // props
   export let name;
+  export let parent;
+  export let cdepth;
+  export let rdepth;
+  export let childrenCount = 0;
+  export let i;
 
   // inner state
   let buttonNode;
 
-  // let leafID = getFullBranchName({name, parent});
-  // $: active = $leafStates[leafID];
+  let leafID = getFullBranchName({name, parent});
+  $: active = $leafStates[leafID];
 
 
   function leafClick(e) {
-    //pass event to parent
+    dispatch('pressed', {
+      name, parent
+    });
   }
 
-  function setPath() {
-    const rect = buttonNode.getBoundingClientRect();
-    updateObjectStore(positionMap, leafID, {x: rect.left + rect.width / 2, y: rect.top + rect.height / 2});
-    const start = $positionMap[parent];
-    const end = $positionMap[leafID];
-    path = getPath(start, end);
-    if (!path) { return; }
-    svgWidth = start.x + end.x;
-    svgHeight = start.y + end.y;
-  }
 
   // lifecycle callbacks
-
-  afterUpdate(() => {
-    if (!active) { return; }
-    // setPath();
-  });
 
   onMount(() => {
     // implement init
@@ -74,9 +66,12 @@
   }
 </style>
 
-<!-- {#if active || !i} -->
-  <div>
+{#if active || !i}
+  <div style="grid-column: {cdepth}; grid-row: {rdepth}">
     <span>{name}</span>
-    <button bind:this={buttonNode}></button>
+    <button bind:this={buttonNode}
+      style="cursor: {childrenCount ? 'pointer' : 'auto'}"
+      on:click={leafClick}
+    ></button>
   </div>
-<!-- {/if} -->
+{/if}

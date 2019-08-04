@@ -4,6 +4,9 @@
   import { getFullBranchName, addDeepChildren } from 'utils';
 
   // inner state
+  $: parentOptions = [...$flatTree].map( (leaf) => getFullBranchName(leaf));
+  let name = '';
+  let parent = '';
 
   // inner functions
   function nameCheck() {
@@ -24,8 +27,14 @@
   }
 
   function submitForm(e) {
-    // to implement form submition
-    console.log(e);
+    const failMessage = nameCheck(); 
+    if (!failMessage) {
+      addDeepChildren(tree, {name, parent});
+      parent = '';
+      name = '';
+    } else {
+      alert(failMessage);
+    }
   }
 </script>
 
@@ -47,11 +56,16 @@
 
 
 <h1>Hello VinJS!</h1>
-<form action="_self">
+<form action="_self" on:submit|preventDefault={submitForm}>
   <fieldset>
     <legend>Add new leaf:</legend>
-    <input type="text" placeholder="Parent">
-    <input type="text" placeholder="Name">
+    <input list="parent-options" type="text" placeholder="Parent"  bind:value={parent}>
+    <datalist id="parent-options">
+      {#each parentOptions as leafID }
+        <option value="{leafID}" />
+      {/each}
+    </datalist>
+    <input type="text" placeholder="Name" bind:value={name}>
     <button type="submit">Add</button>
   </fieldset>
 </form>
