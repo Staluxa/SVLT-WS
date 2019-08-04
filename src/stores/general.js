@@ -4,7 +4,7 @@ import { writable, derived } from 'svelte/store';
 import { flattenTree } from 'utils';
 import { SmallTree } from 'examples';
 
-export const tree = writable(SmallTree());
+export const tree = writable(Object.assign({}, SmallTree()));
 
 export const flatTree = derived(
   tree,

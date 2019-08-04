@@ -8,10 +8,8 @@
   const dispatch = createEventDispatcher();
 
   // props
-  export let name;
 
   // inner state
-  let buttonNode;
 
 
   // let leafID = getFullBranchName({name, parent});
@@ -19,9 +17,7 @@
 
 
   function leafClick(e) {
-    dispatch('pressed', {
-      name, parent
-    });
+    //pass event to parent
   }
 
 
@@ -65,9 +61,6 @@
 <!-- {#if active || !i} -->
   <div>
     <span>{name}</span>
-    <button bind:this={buttonNode}
-      aria-label="expand {name}"
-      on:click={leafClick}>
-      </button>
+    <button bind:this={buttonNode}></button>
   </div>
 <!-- {/if} -->

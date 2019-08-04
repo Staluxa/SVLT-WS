@@ -6,8 +6,25 @@
 
   // inner functions
   function collapseBranch(e) {
-    // to implement collapse event
-    console.log(e.detail);
+    const fullName = getFullBranchName(e.detail);
+    const children = $flatTree.filter( (leaf) => leaf.parent === fullName );
+    const hideLeafTree = function (leaf) {
+      const fullName = getFullBranchName(leaf);
+      const children = $flatTree.filter( (leaf) => leaf.parent === fullName );
+      children.forEach( (childLeaf) => {
+        const leafID = getFullBranchName(childLeaf);
+        updateObjectStore(leafStates, leafID, false);
+        hideLeafTree(childLeaf);
+      });
+    }
+    children.forEach( (leaf) => {
+      const leafID = getFullBranchName(leaf);
+      const newState = !$leafStates[leafID];
+      updateObjectStore(leafStates, leafID, newState);
+      if (!newState) {
+        hideLeafTree(leaf);
+      }
+    });
   }
 
 
@@ -25,7 +42,5 @@
 </style>
 
 <div>
-  {#each $flatTree as leaf}
-    <Leaf name={leaf.name} on:pressed={collapseBranch}></Leaf>
-  {/each}
+  <!-- <Leaf></Leaf> -->
 </div>

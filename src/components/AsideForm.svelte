@@ -35,7 +35,7 @@
 
 
 <h1>Hello VinJS!</h1>
-<form action="_self" on:submit|preventDefault={submitForm}>
+<form action="_self">
   <fieldset>
     <legend>Add new leaf:</legend>
     <input type="text" placeholder="Parent">
