@@ -8,9 +8,10 @@
   const dispatch = createEventDispatcher();
 
   // props
+  export let name;
 
   // inner state
-
+  let buttonNode;
 
   // let leafID = getFullBranchName({name, parent});
   // $: active = $leafStates[leafID];
